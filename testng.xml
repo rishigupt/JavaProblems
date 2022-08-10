@@ -1,0 +1,24 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite1" verbose="1" thread-count="2" parallel="tests">
+    <test name="Chrome" parallel="methods">
+        <parameter name="browser"  value="CHROME"/>
+        <classes>
+            <class name="flipkart_pom.tests.FirstTest" >
+            <!--<methods>
+                <include name="addProduct" />
+            </methods>-->
+            </class>
+        </classes>
+    </test>
+    <test name="Edge" parallel="methods">
+        <parameter name="browser"  value="EDGE"/>
+        <classes>
+            <class name="flipkart_pom.tests.FirstTest" >
+               <!-- <methods>
+                    <include name="addProduct" />
+                </methods>-->
+            </class>
+        </classes>
+    </test>
+</suite>
