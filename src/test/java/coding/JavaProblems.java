@@ -1,6 +1,7 @@
 package coding;
 import org.testng.annotations.Test;
 
+import java.io.*;
 import java.lang.*;
 import java.util.*;
 
@@ -11,18 +12,18 @@ public class JavaProblems {
     @Test
     public void primeNumbers1(){
         int i = 2;
-        int num;
+        int count;
         int primeCount = 1;
-        while(primeCount <= 10) {
-            num = 0;
+        while(primeCount <= 5) {
+            count = 0;
             int j;
             for (j = 2; j <=i/2 ; j++) {
                 if (i%j==0){
-                    num++;
+                    count++;
                     break;
                 }
             }
-            if (num==0){
+            if (count==0){
                 System.out.println(i + " is Prime");
                 primeCount++;
             }
@@ -30,7 +31,7 @@ public class JavaProblems {
         }
     }
 
-    //Print all Prime numbers before certain number
+    //Print all Prime numbers before certain number(15)
     // start dividing by 2 till i/2
     @Test
     public void primeNumbers2() {
@@ -83,14 +84,13 @@ public class JavaProblems {
     public void countWords(){
 
         HashMap<String, Integer> map = new HashMap<>();
-        String str = "my rishi name is rishi gupta my";
+        String str = "my rishi name is my rishi gupta my";
         String arr[] = str.split(" ");
-        Integer count = 1;
         for (String word : arr) {
             if(map.containsKey(word))
-                map.put(word, count+1);
+                map.put(word, map.get(word)+1);
             else
-                map.put(word, count);
+                map.put(word, 1);
             }
         System.out.println(map);
         }
@@ -100,20 +100,20 @@ public class JavaProblems {
     public void uniqueElementsInArray() {
         String arr[] = {"abc" , "def", "abc", "def" , "klm"};
         HashMap<String, Integer> map = new HashMap<>();
-        Integer count = 1;
         for (String word: arr) {
             if(map.containsKey(word))
-                map.put(word, count+1);
+                map.put(word, map.get(word)+1);
             else
-                map.put(word, count);
+                map.put(word, 1);
         }
         System.out.println(map.keySet());
+        System.out.println(map.values());
     }
 
     //palindrome
     @Test
     public void palindrome(){
-        String A = "madam";
+        String A = "maam";
         char[] arr = A.toCharArray();
         int len = arr.length;
         int flag = 0;
@@ -212,7 +212,7 @@ public class JavaProblems {
     public void printFibonacci() {
         long a = 0;
         long b = 1;
-        long n = 50;
+        long n = 5;
         long sum = 0;
 
         for (int i=2; i<=n; i++) {
@@ -247,7 +247,8 @@ public class JavaProblems {
         }
     }
 
-    //print nth Fibonnaci with recursion storing values in Array for reuse and low time complexity
+    //print nth Fibonnaci with recursion and Memoization
+    //storing values in Array for reuse and low time complexity
     public long fibonacciNew(int n) {
         if (n <= 1) {
             return n;
@@ -789,6 +790,155 @@ public class JavaProblems {
         String[] arr = email.split("@");
         System.out.println("Your Username is: " + arr[0]);
     }
+
+    @Test
+    void fileOperations(){
+        String dirPath = "folder" + File.separator + "anotherFolder"+ File.separator;
+        File dir = new File(dirPath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+
+        File file = new File(dirPath + File.separator +"MyFile.txt");
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write("my new file".getBytes());
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(file.getName());
+        System.out.println(file.getAbsolutePath());
+        System.out.println(file.canWrite());
+
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            int i;
+            while((i = fis.read()) != -1){
+                System.out.print((char) i);
+            }
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //file.delete();
+    }
+
+    @Test
+    void fileOperation2(){
+        String dirPath = "folder" + File.separator + "anotherFolder"+ File.separator;
+        File dir = new File(dirPath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+
+        File file = new File(dirPath + File.separator +"MyFile.txt");
+        if (!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+          try {
+            FileWriter fileWriter = new FileWriter(file);
+             fileWriter.write("first attempt");
+             fileWriter.append('s');
+             fileWriter.flush();
+             fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileReader fileReader = new FileReader(file);
+            int i;
+            while((i = fileReader.read()) != -1){
+                System.out.print((char)i);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    void deleteElementFromArray() {
+        int[] a = {10, 20, 30, 40, 50};
+        int index = 2;
+        int[] b = new int[a.length-1];
+
+        for (int i = 0; i < a.length; i++) {
+            if(i < index) {
+                b[i] = a[i];
+            } else if(i == index) {
+                continue;
+            } else if(i > index) {
+                b[i-1] = a[i];
+            }
+        }
+
+        for(int element: b){
+            System.out.println(element);
+        }
+    }
+
+    @Test
+    public static void runTerminalCommand(){
+        try{
+            String path = System.getProperty("user.dir");
+            ProcessBuilder builder = new ProcessBuilder(
+                    "cmd.exe", "/c", "cd \"" +path+ "\" && " + "java --version");
+            builder.redirectErrorStream(true);
+            Process p = builder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if(line.contains("11.0")) {
+                    System.out.println(line);
+                    break;
+                }
+                //System.out.println(line);
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public static void runTerminalCommandOnLinux(){
+        try{
+            String path = System.getProperty("user.dir");
+            ProcessBuilder builder = new ProcessBuilder();
+            builder.command("/bin/bash", "-c", "ls \""+path+"\" && "+ "java --version");
+            builder.redirectErrorStream(true);
+            Process p = builder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if(line.contains("11.0")) {
+                    System.out.println(line);
+                    break;
+                }
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 
 
